@@ -70,7 +70,9 @@ const videoRouter = require("./routes/videoCreator");
 const cors = require('cors');
 
 app.use(cors({
-  origin: 'https://leetcode-frontend-d07j.onrender.com',
+  origin: [
+    "https://leetcode-frontend-d07j.onrender.com"
+  ],
   credentials: true
 }));
 
