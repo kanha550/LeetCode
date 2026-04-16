@@ -12,7 +12,7 @@
 // const videoRouter = require("./routes/videoCreator")
 
 // app.use(cors({
-//   origin: 'http://localhost:5173',  // if we write * then anyone can access 
+//   origin: 'https://leetcode-frontend-d07j.onrender.com',  // if we write * then anyone can access 
 //   credentials: true
 // }))
 
@@ -75,7 +75,11 @@ const cors = require('cors');
 // }));
 
 app.use(cors({
+<<<<<<< HEAD
   origin: ["http://localhost:5173"],
+=======
+  origin: "https://leetcode-frontend-d07j.onrender.com",
+>>>>>>> bcd9f27420a7cb7b606e42f022dafb7ca1f74c0d
   credentials: true
 }));
 
