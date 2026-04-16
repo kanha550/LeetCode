@@ -86,7 +86,7 @@ function Signup() {
                 <label className="label">
                   <span className="label-text text-slate-300 font-medium flex items-center gap-2">
                     <User size={16} />
-                    First Name
+                    Full Name
                   </span>
                 </label>
                 <div className="relative">

@@ -75,7 +75,7 @@ const cors = require('cors');
 // }));
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://13.234.17.43"],
+  origin: ["http://localhost:5173"],
   credentials: true
 }));
 

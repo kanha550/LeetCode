@@ -21,37 +21,45 @@ function ChatAi({problem}) {
     }, [messages]);
 
     const onSubmit = async (data) => {
-        if (!data.message.trim()) return;
+            if (!data.message.trim()) return;
 
-        const userMessage = data.message.trim();
-        setMessages(prev => [...prev, { role: 'user', parts:[{text: userMessage}] }]);
-        reset();
-        setIsLoading(true);
+            const userMessage = data.message.trim();
 
-        try {
-            const response = await axiosClient.post("/ai/chat", {
-                messages: messages,
-                title: problem.title,
-                description: problem.description,
-                testCases: problem.visibleTestCases,
-                startCode: problem.startCode
-            });
+            const updatedMessages = [
+                ...messages,
+                { role: 'user', parts: [{ text: userMessage }] }
+            ];
 
-            setMessages(prev => [...prev, { 
-                role: 'model', 
-                parts:[{text: response.data.message}] 
-            }]);
-        } catch (error) {
-            console.error("API Error:", error);
-            setMessages(prev => [...prev, { 
-                role: 'model', 
-                parts:[{text: "I apologize, but I'm having trouble connecting right now. Please try again in a moment."}]
-            }]);
-        } finally {
-            setIsLoading(false);
-            inputRef.current?.focus();
-        }
-    };
+            setMessages(updatedMessages); // update UI
+            reset();
+            setIsLoading(true);
+
+            try {
+                const response = await axiosClient.post("/ai/chat", {
+                    messages: updatedMessages, // ✅ FIXED
+                    title: problem.title,
+                    description: problem.description,
+                    testCases: problem.visibleTestCases,
+                    startCode: problem.startCode
+                });
+
+                setMessages(prev => [...prev, { 
+                    role: 'model', 
+                    parts: [{ text: response.data.message }] 
+                }]);
+
+            } catch (error) {
+                console.error("API Error:", error.response?.data || error.message);
+
+                setMessages(prev => [...prev, { 
+                    role: 'model', 
+                    parts: [{ text: error.response?.data?.message || "Backend error"}] 
+                }]);
+            } finally {
+                setIsLoading(false);
+                inputRef.current?.focus();
+            }
+        };
 
     const formatMessage = (text) => {
         // Basic markdown-like formatting
