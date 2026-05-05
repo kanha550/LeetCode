@@ -60,6 +60,8 @@ const app = express();
 const main = require('./config/db');
 const cookieParser = require('cookie-parser');
 const redisClient = require('./config/redis');
+const passport = require('passport');
+require('./config/passport'); // Load strategies
 
 const authRouter = require("./routes/userAuth");
 const problemRouter = require("./routes/problemCreator");
@@ -81,6 +83,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Routes
 app.use('/user', authRouter);

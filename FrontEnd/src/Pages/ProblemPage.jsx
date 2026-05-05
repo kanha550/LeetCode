@@ -6,17 +6,17 @@ import axiosClient from "../utils/axiosClient";
 import SubmissionHistory from "../components/SubmissionHistory";
 import ChatAi from '../components/ChatAi';
 import Editorial from '../components/Editorial';
-import { 
-  Play, 
-  Send, 
-  Code2, 
-  BookOpen, 
-  FileText, 
-  History, 
-  MessageSquare, 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
+import {
+  Play,
+  Send,
+  Code2,
+  BookOpen,
+  FileText,
+  History,
+  MessageSquare,
+  CheckCircle2,
+  XCircle,
+  Clock,
   Database,
   Zap,
   Trophy,
@@ -51,7 +51,7 @@ const ProblemPage = () => {
   const [activeRightTab, setActiveRightTab] = useState('code');
   const [mobileView, setMobileView] = useState('description'); // 'description' or 'editor'
   const editorRef = useRef(null);
-  let {problemId} = useParams();
+  let { problemId } = useParams();
 
   const { handleSubmit } = useForm();
 
@@ -94,7 +94,7 @@ const ProblemPage = () => {
   const handleRun = async () => {
     setLoading(true);
     setRunResult(null);
-    
+
     try {
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code,
@@ -117,7 +117,7 @@ const ProblemPage = () => {
   const handleSubmitCode = async () => {
     setLoading(true);
     setSubmitResult(null);
-    
+
     try {
       const response = await axiosClient.post(`/submission/submit/${problemId}`, {
         code: code,
@@ -209,11 +209,10 @@ const ProblemPage = () => {
             return (
               <button
                 key={tab.id}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 relative group ${
-                  activeLeftTab === tab.id
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 relative group ${activeLeftTab === tab.id
                     ? 'text-blue-400'
                     : 'text-slate-400 hover:text-slate-200'
-                }`}
+                  }`}
                 onClick={() => setActiveLeftTab(tab.id)}
               >
                 <Icon size={16} />
@@ -237,7 +236,7 @@ const ProblemPage = () => {
                     <div className="flex items-start justify-between mb-4">
                       <h1 className="text-3xl font-bold text-slate-100 flex-1">{problem.title}</h1>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       {(() => {
                         const diffConfig = getDifficultyConfig(problem.difficulty);
@@ -299,7 +298,7 @@ const ProblemPage = () => {
                     <FileText size={24} className="text-blue-400" />
                     Editorial
                   </h2>
-                  <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration}/>
+                  <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
                 </div>
               )}
 
@@ -322,11 +321,11 @@ const ProblemPage = () => {
                         </div>
                       </div>
                     )) || (
-                      <div className="text-center py-12 text-slate-500">
-                        <Trophy size={48} className="mx-auto mb-4 opacity-50" />
-                        <p>Solutions will be available after you solve the problem.</p>
-                      </div>
-                    )}
+                        <div className="text-center py-12 text-slate-500">
+                          <Trophy size={48} className="mx-auto mb-4 opacity-50" />
+                          <p>Solutions will be available after you solve the problem.</p>
+                        </div>
+                      )}
                   </div>
                 </div>
               )}
@@ -365,11 +364,10 @@ const ProblemPage = () => {
             return (
               <button
                 key={tab.id}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 relative ${
-                  activeRightTab === tab.id
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 relative ${activeRightTab === tab.id
                     ? 'text-blue-400'
                     : 'text-slate-400 hover:text-slate-200'
-                }`}
+                  }`}
                 onClick={() => setActiveRightTab(tab.id)}
               >
                 <Icon size={16} />
@@ -392,11 +390,10 @@ const ProblemPage = () => {
                   {['javascript', 'java', 'cpp'].map((lang) => (
                     <button
                       key={lang}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        selectedLanguage === lang
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedLanguage === lang
                           ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25'
                           : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
-                      }`}
+                        }`}
                       onClick={() => handleLanguageChange(lang)}
                     >
                       {lang === 'cpp' ? 'C++' : lang === 'javascript' ? 'JavaScript' : 'Java'}
@@ -439,7 +436,7 @@ const ProblemPage = () => {
 
               {/* Action Buttons */}
               <div className="p-3 sm:p-4 bg-slate-800/80 backdrop-blur-md border-t border-slate-700/50 flex justify-between items-center sticky bottom-0 z-20">
-                <button 
+                <button
                   className="text-xs sm:text-sm text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1 sm:gap-2"
                   onClick={() => setActiveRightTab('testcase')}
                 >
@@ -448,9 +445,8 @@ const ProblemPage = () => {
                 </button>
                 <div className="flex gap-2 sm:gap-3">
                   <button
-                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-slate-700 hover:bg-slate-600 text-white ${
-                      loading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-slate-700 hover:bg-slate-600 text-white ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     onClick={handleRun}
                     disabled={loading}
                   >
@@ -462,9 +458,8 @@ const ProblemPage = () => {
                     <span className="xs:inline">Run</span>
                   </button>
                   <button
-                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20 ${
-                      loading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20 ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     onClick={handleSubmitCode}
                     disabled={loading}
                   >
@@ -487,18 +482,17 @@ const ProblemPage = () => {
                 Test Results
               </h3>
               {runResult ? (
-                <div className={`p-6 rounded-lg border-2 ${
-                  runResult.success 
-                    ? 'bg-emerald-500/10 border-emerald-500/30' 
+                <div className={`p-6 rounded-lg border-2 ${runResult.success
+                    ? 'bg-emerald-500/10 border-emerald-500/30'
                     : 'bg-rose-500/10 border-rose-500/30'
-                }`}>
+                  }`}>
                   {runResult.success ? (
                     <div>
                       <div className="flex items-center gap-3 mb-4">
                         <CheckCircle2 size={24} className="text-emerald-400" />
                         <h4 className="text-xl font-bold text-emerald-400">All Test Cases Passed!</h4>
                       </div>
-                      
+
                       <div className="flex gap-6 mb-6 text-sm">
                         <div className="flex items-center gap-2">
                           <Clock size={16} className="text-slate-400" />
@@ -509,7 +503,7 @@ const ProblemPage = () => {
                           <span className="text-slate-300">Memory: {runResult.memory} KB</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-3">
                         {runResult.testCases.map((tc, i) => (
                           <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4">
@@ -532,7 +526,7 @@ const ProblemPage = () => {
                         <XCircle size={24} className="text-rose-400" />
                         <h4 className="text-xl font-bold text-rose-400">Test Failed</h4>
                       </div>
-                      
+
                       <div className="space-y-3">
                         {runResult.testCases.map((tc, i) => (
                           <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4">
@@ -571,11 +565,10 @@ const ProblemPage = () => {
                 Submission Result
               </h3>
               {submitResult ? (
-                <div className={`p-6 rounded-lg border-2 ${
-                  submitResult.accepted 
-                    ? 'bg-emerald-500/10 border-emerald-500/30' 
+                <div className={`p-6 rounded-lg border-2 ${submitResult.accepted
+                    ? 'bg-emerald-500/10 border-emerald-500/30'
                     : 'bg-rose-500/10 border-rose-500/30'
-                }`}>
+                  }`}>
                   {submitResult.accepted ? (
                     <div>
                       <div className="flex items-center gap-3 mb-6">
@@ -587,7 +580,7 @@ const ProblemPage = () => {
                           <p className="text-slate-400 text-sm">Congratulations on solving this problem</p>
                         </div>
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-4">
                           <div className="text-slate-400 text-sm mb-1">Test Cases</div>
@@ -620,7 +613,7 @@ const ProblemPage = () => {
                           <p className="text-slate-400 text-sm">Keep trying, you'll get it!</p>
                         </div>
                       </div>
-                      
+
                       <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-4">
                         <div className="text-slate-400 text-sm mb-1">Test Cases Passed</div>
                         <div className="text-2xl font-bold text-rose-400">
