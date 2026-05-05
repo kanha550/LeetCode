@@ -49,6 +49,7 @@ const ProblemPage = () => {
   const [submitResult, setSubmitResult] = useState(null);
   const [activeLeftTab, setActiveLeftTab] = useState('description');
   const [activeRightTab, setActiveRightTab] = useState('code');
+  const [mobileView, setMobileView] = useState('description'); // 'description' or 'editor'
   const editorRef = useRef(null);
   let {problemId} = useParams();
 
@@ -181,9 +182,26 @@ const ProblemPage = () => {
   }
 
   return (
-    <div className="h-screen flex bg-slate-900 text-slate-100">
+    <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row bg-slate-900 text-slate-100 overflow-x-hidden">
+      {/* Mobile View Toggle */}
+      <div className="lg:hidden flex items-center bg-slate-800/80 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50">
+        <button
+          className={`flex-1 py-3 text-sm font-bold transition-all ${mobileView === 'description' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-400'}`}
+          onClick={() => setMobileView('description')}
+        >
+          DESCRIPTION
+        </button>
+        <button
+          className={`flex-1 py-3 text-sm font-bold transition-all ${mobileView === 'editor' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-400'}`}
+          onClick={() => setMobileView('editor')}
+        >
+          EDITOR
+        </button>
+      </div>
+
       {/* Left Panel */}
-      <div className="w-1/2 flex flex-col border-r border-slate-700/50">
+      <div className={`${mobileView === 'description' ? 'flex' : 'hidden'} lg:flex w-full lg:w-1/2 flex-col border-r border-slate-700/50 lg:h-full overflow-hidden`}>
+
         {/* Left Tabs */}
         <div className="flex items-center bg-slate-800/50 backdrop-blur-sm border-b border-slate-700/50 px-2">
           {leftTabs.map((tab) => {
@@ -338,7 +356,8 @@ const ProblemPage = () => {
       </div>
 
       {/* Right Panel */}
-      <div className="w-1/2 flex flex-col">
+      <div className={`${mobileView === 'editor' ? 'flex' : 'hidden'} lg:flex w-full lg:w-1/2 flex-col lg:h-full overflow-hidden`}>
+
         {/* Right Tabs */}
         <div className="flex items-center bg-slate-800/50 backdrop-blur-sm border-b border-slate-700/50 px-2">
           {rightTabs.map((tab) => {
@@ -387,7 +406,7 @@ const ProblemPage = () => {
               </div>
 
               {/* Monaco Editor */}
-              <div className="flex-1 bg-[#1e1e1e]">
+              <div className="flex-1 min-h-[350px] sm:min-h-[450px] lg:min-h-0 bg-[#1e1e1e] relative">
                 <Editor
                   height="100%"
                   language={getLanguageForMonaco(selectedLanguage)}
@@ -419,52 +438,42 @@ const ProblemPage = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="p-4 bg-slate-800/50 backdrop-blur-sm border-t border-slate-700/50 flex justify-between items-center">
+              <div className="p-3 sm:p-4 bg-slate-800/80 backdrop-blur-md border-t border-slate-700/50 flex justify-between items-center sticky bottom-0 z-20">
                 <button 
-                  className="text-sm text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-2"
+                  className="text-xs sm:text-sm text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1 sm:gap-2"
                   onClick={() => setActiveRightTab('testcase')}
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight size={14} className="sm:size-4" />
                   Console
                 </button>
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <button
-                    className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white ${
+                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-slate-700 hover:bg-slate-600 text-white ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     onClick={handleRun}
                     disabled={loading}
                   >
                     {loading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        Running...
-                      </>
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     ) : (
-                      <>
-                        <Play size={16} />
-                        Run Code
-                      </>
+                      <Play size={14} className="sm:size-4" />
                     )}
+                    <span className="xs:inline">Run</span>
                   </button>
                   <button
-                    className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg shadow-blue-500/25 ${
+                    className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20 ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     onClick={handleSubmitCode}
                     disabled={loading}
                   >
                     {loading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        Submitting...
-                      </>
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     ) : (
-                      <>
-                        <Send size={16} />
-                        Submit
-                      </>
+                      <Send size={14} className="sm:size-4" />
                     )}
+                    <span>Submit</span>
                   </button>
                 </div>
               </div>

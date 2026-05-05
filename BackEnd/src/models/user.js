@@ -109,6 +109,25 @@ const userSchema = new Schema({
   password:{
     type:String,
     required:true
+  },
+  
+  profilePicture: {
+    type: String,
+    default: function() {
+      return `https://api.dicebear.com/8.x/fun-emoji/svg?seed=${this.firstName}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+    }
+  },
+
+  bio: {
+    type: String,
+    maxLength: 200,
+    default: "Passionate Coder"
+  },
+
+  education: {
+    type: String,
+    maxLength: 100,
+    default: "N/A"
   }
   
 }, {timestamps:true});

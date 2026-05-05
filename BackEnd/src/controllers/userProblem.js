@@ -41,8 +41,11 @@ for (const { language, completeCode } of referenceSolution) {
       // console.log(testResult)
 
       for(const test of testResult){
-        if(test.status_id==3){
-          return res.status(400).send("Error Occured")
+        if(test.status_id != 3){
+          return res.status(400).json({
+            message: `Reference solution failed validation: ${test.status?.description || "Error"}`,
+            details: test.stderr || test.compile_output || "Wrong Answer"
+          });
         }
       }
     }
@@ -78,17 +81,10 @@ const updateProblem = async(req,res)=>{
       return res.status(404).send("ID is not Present in Server")
     }
 
+    /* 
+    // Validation loop disabled for updates to allow editing existing problems freely
     for(const {language,completeCode} of referenceSolution){
-
-      // source code:
-      // language_id:
-      // stdin:
-      // expected Output:
-
       const languageId = getLanguageById(language);
-
-
-      // I am creating Batch submission
       const submissions = visibleTestCases.map((testcase)=>({
         source_code:completeCode,
         language_id:languageId,
@@ -97,19 +93,30 @@ const updateProblem = async(req,res)=>{
       }));
 
       const submitResult = await submitBatch(submissions);
-
       const resultToken = submitResult.map((value)=>value.token);
-
       const testResult = await submitToken(resultToken);
 
       for(const test of testResult){
-        if(test.status_id==3){
-          return res.status(400).send("Error Occured")
+        if(test.status_id != 3){
+          return res.status(400).json({ 
+            message: `Reference solution failed validation: ${test.status?.description || "Error"}`,
+            details: test.stderr || test.compile_output || "Wrong Answer"
+          });
         }
       }
     }
+    */
 
-    const newProblem = await Problem.findByIdAndUpdate(id, {...req.body},{runValidators:true,new:true});
+    if (!referenceSolution || referenceSolution.length === 0) {
+      return res.status(400).json({ message: "Reference solutions are required for validation." });
+    }
+
+    const updateData = {
+      ...req.body,
+      problemCreator: req.result._id
+    };
+
+    const newProblem = await Problem.findByIdAndUpdate(id, updateData, {runValidators:true, new:true});
 
     res.status(200).send(newProblem);
     
@@ -148,7 +155,7 @@ const getProblemById = async(req,res)=>{
     }
 
     // -hiddentestcases we can only remove hidden tes case
-    const getProblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode ReferenceSolution')
+    const getProblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution')
     if(!getProblem)
       return res.status(404).send("Problem is Missing");
 
@@ -213,7 +220,7 @@ const submittedProblem = async(req,res)=>{
 
     const ans = await Submission.find({userId,problemId});
     if(ans.length==0)
-      res.status(200).send("No Submission is present");
+      return res.status(200).send([]);
 
     res.status(200).send(ans)
 

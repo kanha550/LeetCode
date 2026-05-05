@@ -107,20 +107,20 @@ function Homepage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <NavLink to="/" className="flex items-center gap-3 group">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
-                <Code2 className="text-white" size={28} />
+            <NavLink to="/" className="flex items-center gap-2 sm:gap-3 group">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg sm:rounded-xl shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
+                <Code2 className="text-white" size={24} />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
                 CodingAdda
               </span>
             </NavLink>
 
-            {/* Center Stats */}
-            <div className="hidden md:flex items-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 rounded-lg border border-slate-600/50">
-                <Trophy className="text-yellow-400" size={20} />
-                <div className="text-sm">
+            {/* Center Stats - Hidden on very small screens, visible on medium+ */}
+            <div className="hidden sm:flex items-center gap-6">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-700/50 rounded-lg border border-slate-600/50">
+                <Trophy className="text-yellow-400" size={18} />
+                <div className="text-xs sm:text-sm">
                   <span className="text-slate-400">Solved: </span>
                   <span className="font-bold text-white">{stats.solved}</span>
                   <span className="text-slate-500">/{stats.total}</span>
@@ -148,10 +148,10 @@ function Homepage() {
                   </div>
                 </li>
                 <li>
-                  <a className="flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700">
+                  <NavLink to="/profile" className="flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-700">
                     <User size={16} />
                     Profile
-                  </a>
+                  </NavLink>
                 </li>
                 {user?.role === "admin" && (
                   <li>
@@ -186,49 +186,49 @@ function Homepage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 group">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="glass-card rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 group animate-fade-in">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-xl group-hover:scale-110 transition-transform">
                 <Trophy className="text-blue-400" size={24} />
               </div>
               <Sparkles className="text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
             </div>
-            <h3 className="text-slate-400 text-sm mb-1">Total Solved</h3>
+            <h3 className="text-slate-400 text-sm mb-1 font-medium">Total Solved</h3>
             <p className="text-3xl font-bold text-white mb-1">{stats.solved}</p>
             <p className="text-slate-500 text-sm">of {stats.total} problems</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-emerald-500/50 transition-all duration-300 group">
+          <div className="glass-card rounded-2xl p-6 hover:border-emerald-500/50 transition-all duration-300 group animate-fade-in delay-100">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-emerald-500/20 rounded-xl group-hover:scale-110 transition-transform">
                 <Target className="text-emerald-400" size={24} />
               </div>
               <div className="text-xs px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">Easy</div>
             </div>
-            <h3 className="text-slate-400 text-sm mb-1">Easy Problems</h3>
+            <h3 className="text-slate-400 text-sm mb-1 font-medium">Easy Problems</h3>
             <p className="text-3xl font-bold text-white">{stats.easy}</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all duration-300 group">
+          <div className="glass-card rounded-2xl p-6 hover:border-amber-500/50 transition-all duration-300 group animate-fade-in delay-200">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-amber-500/20 rounded-xl group-hover:scale-110 transition-transform">
                 <Zap className="text-amber-400" size={24} />
               </div>
               <div className="text-xs px-2 py-1 bg-amber-500/20 text-amber-400 rounded-full border border-amber-500/30">Medium</div>
             </div>
-            <h3 className="text-slate-400 text-sm mb-1">Medium Problems</h3>
+            <h3 className="text-slate-400 text-sm mb-1 font-medium">Medium Problems</h3>
             <p className="text-3xl font-bold text-white">{stats.medium}</p>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-rose-500/50 transition-all duration-300 group">
+          <div className="glass-card rounded-2xl p-6 hover:border-rose-500/50 transition-all duration-300 group animate-fade-in delay-300">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-rose-500/20 rounded-xl group-hover:scale-110 transition-transform">
                 <Award className="text-rose-400" size={24} />
               </div>
               <div className="text-xs px-2 py-1 bg-rose-500/20 text-rose-400 rounded-full border border-rose-500/30">Hard</div>
             </div>
-            <h3 className="text-slate-400 text-sm mb-1">Hard Problems</h3>
+            <h3 className="text-slate-400 text-sm mb-1 font-medium">Hard Problems</h3>
             <p className="text-3xl font-bold text-white">{stats.hard}</p>
           </div>
         </div>
@@ -242,14 +242,14 @@ function Homepage() {
             <h3 className="text-xl font-bold text-slate-100">Filter Problems</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="text"
                 placeholder="Search problems..."
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
                 value={filters.search}
                 onChange={(e) => setFilters({...filters, search: e.target.value})}
               />
@@ -257,7 +257,7 @@ function Homepage() {
 
             {/* Status */}
             <select
-              className="px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer outline-none"
               value={filters.status}
               onChange={(e) => setFilters({...filters, status: e.target.value})}
             >
@@ -267,7 +267,7 @@ function Homepage() {
 
             {/* Difficulty */}
             <select
-              className="px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer outline-none"
               value={filters.difficulty}
               onChange={(e) => setFilters({...filters, difficulty: e.target.value})}
             >
@@ -279,7 +279,7 @@ function Homepage() {
 
             {/* Tag */}
             <select
-              className="px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer outline-none"
               value={filters.tag}
               onChange={(e) => setFilters({...filters, tag: e.target.value})}
             >
@@ -358,10 +358,10 @@ function Homepage() {
               return (
                 <div
                   key={problem._id}
-                  className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-5 hover:border-blue-500/50 transition-all duration-300 group hover:shadow-xl hover:shadow-blue-500/10"
-                  style={{ animationDelay: `${index * 30}ms` }}
+                  className="glass-card rounded-xl p-4 sm:p-5 hover:border-blue-500/50 transition-all duration-300 group hover:shadow-xl hover:shadow-blue-500/10 animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     {/* Left: Status & Title */}
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                       <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
@@ -381,17 +381,17 @@ function Homepage() {
                         >
                           {problem.title}
                         </NavLink>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${diffConfig.bg} ${diffConfig.color} border ${diffConfig.border}`}>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold ${diffConfig.bg} ${diffConfig.color} border ${diffConfig.border}`}>
                             {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
                           </span>
-                          <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/30">
-                            <Tag size={12} />
+                          <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                            <Tag size={10} />
                             {problem.tags}
                           </span>
                           {isSolved && (
-                            <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                              <CheckCircle2 size={12} />
+                            <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                              <CheckCircle2 size={10} />
                               Solved
                             </span>
                           )}
@@ -402,7 +402,7 @@ function Homepage() {
                     {/* Right: Action Button */}
                     <NavLink
                       to={`/problem/${problem._id}`}
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 flex-shrink-0"
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 flex-shrink-0 w-full sm:w-auto"
                     >
                       <span>{isSolved ? 'Solve Again' : 'Solve'}</span>
                       <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />

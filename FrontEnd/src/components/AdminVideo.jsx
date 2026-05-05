@@ -16,6 +16,7 @@ import {
   Tag,
   CheckCircle2
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const AdminVideo = () => {
   const [problems, setProblems] = useState([]);
@@ -75,30 +76,14 @@ const AdminVideo = () => {
     try {
       await axiosClient.delete(`/video/delete/${deleteModal.problem._id}`);
       setProblems(problems.filter(problem => problem._id !== deleteModal.problem._id));
-      showNotification('success', 'Video deleted successfully!');
+      toast.success('Video deleted successfully!');
       setDeleteModal({ isOpen: false, problem: null });
     } catch (err) {
-      showNotification('error', err.response?.data?.error || 'Failed to delete video');
+      toast.error(err.response?.data?.error || 'Failed to delete video');
       console.error(err);
     } finally {
       setDeleting(false);
     }
-  };
-
-  const showNotification = (type, message) => {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 ${
-      type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'
-    } text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-slide-in flex items-center gap-2`;
-    notification.innerHTML = `
-      ${type === 'success' 
-        ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
-        : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
-      }
-      <span>${message}</span>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
   };
 
   const getDifficultyConfig = (difficulty) => {

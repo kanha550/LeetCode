@@ -434,27 +434,29 @@ function AdminPanel() {
 
       <div className="admin-root">
         {/* Top Nav */}
-        <nav className="nav-bar px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <nav className="nav-bar px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center justify-between w-full md:w-auto gap-3">
             <div onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer group">
-              <svg className="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 18 }} className="text-white">
+              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 16 }} className="text-white sm:text-lg">
                 CodingAdda
               </span>
             </div>
-            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)' }} />
-            <span style={{ fontFamily: 'Syne', fontWeight: 600, fontSize: 13 }} className="text-slate-400">
-              Admin Panel
-            </span>
+            <div className="flex items-center gap-2">
+              <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)' }} />
+              <span style={{ fontFamily: 'Syne', fontWeight: 600, fontSize: 12 }} className="text-slate-400 sm:text-[13px]">
+                Admin
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto justify-center">
             {steps.map((step, i) => (
-              <button key={i} className={`step-pill ${activeStep === i ? 'active' : 'inactive'}`} onClick={() => setActiveStep(i)} type="button">
+              <button key={i} className={`step-pill px-3 sm:px-4 py-2 ${activeStep === i ? 'active' : 'inactive'}`} onClick={() => setActiveStep(i)} type="button">
                 <span className={`step-dot ${activeStep === i ? 'active' : 'inactive'}`}>{i + 1}</span>
-                {step}
+                <span className="hidden xs:inline">{step}</span>
               </button>
             ))}
           </div>

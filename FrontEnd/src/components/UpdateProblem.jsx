@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   Sparkles
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -129,7 +130,7 @@ function UpdateProblem() {
       setActiveSection('basic');
     } catch (error) {
       console.error('Error fetching problem details:', error);
-      showNotification('error', 'Failed to load problem details');
+      toast.error('Failed to load problem details');
     }
   };
 
@@ -137,33 +138,17 @@ function UpdateProblem() {
     setUpdating(true);
     try {
       await axiosClient.put(`/problem/update/${selectedProblem._id}`, data);
-      showNotification('success', 'Problem updated successfully!');
+      toast.success('Problem updated successfully!');
       setTimeout(() => {
         setSelectedProblem(null);
         fetchProblems();
       }, 1500);
     } catch (error) {
       console.error('Error updating problem:', error);
-      showNotification('error', error.response?.data?.message || 'Failed to update problem');
+      toast.error(error.response?.data?.message || 'Failed to update problem');
     } finally {
       setUpdating(false);
     }
-  };
-
-  const showNotification = (type, message) => {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 ${
-      type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'
-    } text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-slide-in flex items-center gap-2`;
-    notification.innerHTML = `
-      ${type === 'success' 
-        ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
-        : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
-      }
-      <span>${message}</span>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
   };
 
   const filteredProblems = problems.filter(problem =>

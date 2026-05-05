@@ -14,6 +14,7 @@ import {
   Tag,
   Layers
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const AdminDelete = () => {
   const [problems, setProblems] = useState([]);
@@ -77,30 +78,14 @@ const AdminDelete = () => {
       setProblems(problems.filter(problem => problem._id !== deleteModal.problem._id));
       
       // Success notification
-      showNotification('success', 'Problem deleted successfully!');
+      toast.success('Problem deleted successfully!');
       setDeleteModal({ isOpen: false, problem: null });
     } catch (err) {
-      showNotification('error', 'Failed to delete problem');
+      toast.error('Failed to delete problem');
       console.error(err);
     } finally {
       setDeleting(false);
     }
-  };
-
-  const showNotification = (type, message) => {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 ${
-      type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'
-    } text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-slide-in flex items-center gap-2`;
-    notification.innerHTML = `
-      ${type === 'success' 
-        ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
-        : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
-      }
-      <span>${message}</span>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
   };
 
   const getDifficultyConfig = (difficulty) => {
@@ -236,7 +221,7 @@ const AdminDelete = () => {
           </div>
         ) : null}
 
-        {/* Problems Table */}
+        {/* Problems List */}
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl">
           {filteredProblems.length === 0 ? (
             <div className="text-center py-16 text-slate-500">
@@ -245,60 +230,96 @@ const AdminDelete = () => {
               <p className="text-sm mt-2">Try adjusting your search or filters</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-700/50 bg-slate-900/50">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300 w-16">#</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Title</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Difficulty</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Tags</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-300">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProblems.map((problem, index) => {
-                    const diffConfig = getDifficultyConfig(problem.difficulty);
-                    return (
-                      <tr 
-                        key={problem._id} 
-                        className="border-b border-slate-700/30 hover:bg-slate-700/30 transition-all group"
-                      >
-                        <td className="px-6 py-4 text-slate-400 font-medium">{index + 1}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${diffConfig.dotColor}`}></div>
-                            <span className="text-slate-100 font-medium">{problem.title}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${diffConfig.bg} ${diffConfig.color} border ${diffConfig.border}`}>
-                            {problem.difficulty}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <Tag size={14} className="text-purple-400" />
-                            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/30">
-                              {problem.tags}
+            <>
+              {/* Desktop View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-700/50 bg-slate-900/50">
+                      <th className="px-6 py-4 text-sm font-semibold text-slate-300 w-16">#</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-slate-300">Title</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-slate-300">Difficulty</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-slate-300">Tags</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-300">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProblems.map((problem, index) => {
+                      const diffConfig = getDifficultyConfig(problem.difficulty);
+                      return (
+                        <tr 
+                          key={problem._id} 
+                          className="border-b border-slate-700/30 hover:bg-slate-700/30 transition-all group"
+                        >
+                          <td className="px-6 py-4 text-slate-400 font-medium">{index + 1}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-2 h-2 rounded-full ${diffConfig.dotColor}`}></div>
+                              <span className="text-slate-100 font-medium">{problem.title}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${diffConfig.bg} ${diffConfig.color} border ${diffConfig.border}`}>
+                              {problem.difficulty}
                             </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <Tag size={14} className="text-purple-400" />
+                              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                                {problem.tags}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <button
+                              onClick={() => setDeleteModal({ isOpen: true, problem })}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-lg font-medium transition-all border border-rose-500/30 hover:border-rose-500/50 group-hover:shadow-lg group-hover:shadow-rose-500/25"
+                            >
+                              <Trash2 size={16} />
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile View */}
+              <div className="lg:hidden divide-y divide-slate-700/50">
+                {filteredProblems.map((problem, index) => {
+                  const diffConfig = getDifficultyConfig(problem.difficulty);
+                  return (
+                    <div key={problem._id} className="p-4 space-y-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex gap-3">
+                          <span className="text-slate-500 font-mono text-sm">#{index + 1}</span>
+                          <div>
+                            <h3 className="text-slate-100 font-bold leading-tight mb-2">{problem.title}</h3>
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${diffConfig.bg} ${diffConfig.color} border ${diffConfig.border}`}>
+                                {problem.difficulty}
+                              </span>
+                              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                                {problem.tags}
+                              </span>
+                            </div>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button
-                            onClick={() => setDeleteModal({ isOpen: true, problem })}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 rounded-lg font-medium transition-all border border-rose-500/30 hover:border-rose-500/50 group-hover:shadow-lg group-hover:shadow-rose-500/25"
-                          >
-                            <Trash2 size={16} />
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </div>
+                        <button
+                          onClick={() => setDeleteModal({ isOpen: true, problem })}
+                          className="p-2 bg-rose-500/20 text-rose-400 rounded-lg border border-rose-500/30 shrink-0"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
       </div>

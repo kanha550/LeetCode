@@ -75,11 +75,7 @@ const cors = require('cors');
 // }));
 
 app.use(cors({
-<<<<<<< HEAD
-  origin: ["http://localhost:5173"],
-=======
-  origin: "https://leetcode-frontend-d07j.onrender.com",
->>>>>>> bcd9f27420a7cb7b606e42f022dafb7ca1f74c0d
+  origin: ["http://localhost:5173", "https://leetcode-frontend-d07j.onrender.com"],
   credentials: true
 }));
 

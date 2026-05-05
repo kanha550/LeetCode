@@ -4,6 +4,13 @@ const User = require('../models/user');
 const validate = require('../utils/validator');  // for the validate value we have to install validator library
 const bcrypt = require('bcrypt');  //install library in your system for convert password in hashcode
 const jwt = require('jsonwebtoken')  // install this in the system to create a token
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const register = async (req,res)=>{ 
   try {
@@ -35,8 +42,8 @@ const register = async (req,res)=>{
     }
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 60*60*1000
     }); // ye cookie is token ko itne time baad expire kar dega
 
@@ -77,8 +84,8 @@ const login = async(req,res)=>{
      const token = jwt.sign({_id:user._id , emailId:emailId, role:user.role}, process.env.JWT_KEY, {expiresIn: 60*60});
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 60*60*1000
     });  // again jwt token create
     res.status(201).json({
@@ -103,7 +110,12 @@ const logout = async(req,res)=>{
     // teoken add kar denge redis ke blocklist
     // last mein cookie ko clear kar denge
 
-    res.cookie("token",null,{expires: new Date(Date.now())});
+    res.cookie("token", null, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      expires: new Date(0)
+    });
     res.send("Logged Out succesfully")
     
   } catch (err) {
@@ -123,8 +135,8 @@ const adminRegister = async(req,res)=>{
     const token = jwt.sign({_id:user._id , emailId:emailId, role:user.role}, process.env.JWT_KEY, {expiresIn: 60*60});
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 60*60*1000
     });
     res.status(201).send("User Registered Successfully");
@@ -152,14 +164,113 @@ const deleteProfile = async(req,res)=>{
 
 }
 
-module.exports = {register,login,logout,adminRegister, deleteProfile};
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const user = await User.findById(userId).populate({
+      path: 'problemSolved',
+      select: '_id title difficulty tags'
+    });
+
+    const submissions = await Submission.find({ userId });
+    const totalSubmissions = submissions.length;
+    const acceptedSubmissions = submissions.filter(s => s.status === 'accepted').length;
+
+    const stats = {
+      totalSolved: user.problemSolved.length,
+      totalSubmissions,
+      acceptedSubmissions,
+      successRate: totalSubmissions > 0 ? ((acceptedSubmissions / totalSubmissions) * 100).toFixed(1) : 0,
+      difficultyBreakdown: {
+        easy: user.problemSolved.filter(p => p.difficulty === 'easy').length,
+        medium: user.problemSolved.filter(p => p.difficulty === 'medium').length,
+        hard: user.problemSolved.filter(p => p.difficulty === 'hard').length
+      }
+    };
+
+    res.status(200).json({
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailId: user.emailId,
+        role: user.role,
+        createdAt: user.createdAt,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        education: user.education
+      },
+      stats,
+      solvedProblems: user.problemSolved
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching profile: " + err.message });
+  }
+};
+
+const generateProfilePicSignature = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const publicId = `profile_pics/${userId}_${timestamp}`;
+    
+    const uploadParams = {
+      timestamp: timestamp,
+      public_id: publicId,
+    };
+
+    const signature = cloudinary.utils.api_sign_request(
+      uploadParams,
+      process.env.CLOUDINARY_API_SECRET
+    );
+
+    res.json({
+      signature,
+      timestamp,
+      public_id: publicId,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      upload_url: `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate signature' });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const { firstName, lastName, bio, education, profilePicture } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { firstName, lastName, bio, education, profilePicture },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+  } catch (err) {
+    res.status(500).send("Error updating profile: " + err.message);
+  }
+};
+
+module.exports = { register, login, logout, adminRegister, deleteProfile, getUserProfile, updateProfile, generateProfilePicSignature };
 
 /*const redisClient = require('../config/redis');
 const submission = require('../model/submission');
-const User = require('../model/user');
-const validate = require('../utils/validator');
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Submission = require('../models/submission');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 
 // ---------------- REGISTER ----------------

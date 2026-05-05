@@ -12,6 +12,8 @@ import AdminDelete from "./components/AdminDelete";
 import AdminVideo from "./components/AdminVideo"
 import AdminUpload from "./components/AdminUpload"
 import UpdateProblem from "./components/UpdateProblem";
+import ProfilePage from "./Pages/ProfilePage";
+import { Toaster } from 'react-hot-toast';
 
 
 AdminDelete
@@ -35,6 +37,7 @@ function App(){
 
   return(
   <>
+    <Toaster position="top-right" reverseOrder={false} />
     <Routes>
       <Route path="/" element={isAuthenticated ?<Homepage></Homepage>:<Navigate to="/signup" />}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>
@@ -46,6 +49,7 @@ function App(){
       <Route path="/admin/upload/:problemId" element={isAuthenticated && user?.role === 'admin' ? <AdminUpload /> : <Navigate to="/" />} />
       <Route path="/problem/:problemId" element={<ProblemPage/>}></Route>
       <Route path="/admin/update" element={isAuthenticated && user?.role === 'admin' ? <UpdateProblem/> : <Navigate to="/" />} />
+      <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
 
       
     </Routes>
